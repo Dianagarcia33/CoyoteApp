@@ -8,6 +8,8 @@
     "scheme": "coyoteapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "jsEngine": "jsc",
+
     "ios": {
       "supportsTablet": true
     },
