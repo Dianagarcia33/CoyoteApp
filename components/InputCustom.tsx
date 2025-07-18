@@ -11,7 +11,7 @@ type InputCustomProps = {
   secureTextEntry?: boolean;
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   errorMessage?: string;
-  style?: ViewStyle; // para altura externa
+  style?: ViewStyle;
 };
 
 export function InputCustom({
@@ -29,17 +29,23 @@ export function InputCustom({
   return (
     <View style={style}>
       <View
-        className={`w-full px-3 rounded-2xl flex-row items-center gap-3 ${
-          isDarkMode ? "bg-[#070a13]" : "bg-[#F7F8F8]"
-        } ${errorMessage ? "border border-red-500" : ""}`}
         style={{
+          width: "100%",
+          paddingHorizontal: 12,
+          borderRadius: 16,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
           height: 60,
+          backgroundColor: isDarkMode ? "#070a13" : "#F7F8F8",
+          borderWidth: errorMessage ? 1 : 0,
+          borderColor: errorMessage ? "#EF4444" : "transparent",
         }}
       >
-        {icon && (
-          <View className="justify-center items-center">
-            {React.cloneElement(icon as React.ReactElement, {
-              color: isDarkMode ? "#FFFFFF" : (icon as any)?.props?.color,
+        {icon && React.isValidElement(icon) && (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            {React.cloneElement(icon, {
+              color: isDarkMode ? "#FFFFFF" : icon.props.color ?? "#6B7280",
             })}
           </View>
         )}
@@ -66,8 +72,12 @@ export function InputCustom({
 
       {errorMessage && (
         <Text
-          className="mt-1 text-red-500 text-xs font-semibold"
-          style={{ fontFamily: "Poppins-Regular" }}
+          style={{
+            marginTop: 4,
+            color: "#EF4444",
+            fontSize: 12,
+            fontFamily: "Poppins-Regular",
+          }}
         >
           {errorMessage}
         </Text>

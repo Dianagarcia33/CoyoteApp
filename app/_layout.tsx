@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/app/context/AuthContext";
 import "@/global.css";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -14,19 +15,21 @@ export default function RootLayout() {
   });
 
   if (!fontsLoaded) {
-    return null; // puedes usar un loader aquí si quieres
+    return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "slide_from_right", // Transición tipo iOS (slide)
-          presentation: "card", // evita modal
-          gestureEnabled: true, // permite deslizar para volver
-        }}
-      />
-    </ThemeProvider>
+    <AuthProvider> {/* ✅ aquí envuelves todo con el provider */}
+      <ThemeProvider value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "slide_from_right",
+            presentation: "card",
+            gestureEnabled: true,
+          }}
+        />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

@@ -14,14 +14,15 @@ import { ButtonCustom } from "@/components/ButtonCustom";
 import { InputCustom } from "@/components/InputCustom";
 import { Logo } from "@/components/Logo";
 import { Feather } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import { useAuth } from "../context/AuthContext";
 
 const HomeScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const isDarkMode = useColorScheme() === "dark";
+  const { login } = useAuth();
 
   const router = useRouter();
 
@@ -29,6 +30,14 @@ const HomeScreen = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+
+  const { user, isLoading: loadingSession } = useAuth();
+
+  React.useEffect(() => {
+    if (!loadingSession && user) {
+      router.replace("/home");
+    }
+  }, [loadingSession, user]);
 
   const handleLogin = async () => {
     const newErrors: typeof errors = {};
@@ -49,7 +58,7 @@ const HomeScreen = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://192.168.18.4:8000/api/login", {
+      const response = await fetch("http://www.coyoteworkout.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,18 +68,19 @@ const HomeScreen = () => {
       });
 
       const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.message || "Error al iniciar sesión");
+        const errorMsg =
+          data?.message || "Error del servidor. Intenta más tarde.";
+        throw new Error(errorMsg);
       }
 
-      // Guardar token en AsyncStorage
-      await AsyncStorage.setItem("access_token", data.access_token);
-
-      Alert.alert("Login exitoso", `¡Bienvenido/a ${data.user.name}!`);
-
+      await login(data.user, data.access_token);
       router.replace("/home");
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Ocurrió un error inesperado.";
+      Alert.alert("Inicio de sesión fallido", message);
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +100,29 @@ const HomeScreen = () => {
     };
   }, []);
 
+  if (loadingSession) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: isDarkMode ? "#0b111e" : "#ffffff",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Poppins-Regular",
+            fontSize: 16,
+            color: isDarkMode ? "white" : "black",
+          }}
+        >
+          Validando sesión...
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: isDarkMode ? "#0b111e" : "white" }}
@@ -108,7 +141,7 @@ const HomeScreen = () => {
         >
           {/* Contenido arriba */}
           <View style={{ alignItems: "center" }}>
-            <Logo width={180} height={180} />
+            <Logo width={250} height={250} />
             <Text
               style={{
                 color: isDarkMode ? "white" : "black",
@@ -201,7 +234,6 @@ const HomeScreen = () => {
                 style={{
                   color: "#FB7747",
                   fontFamily: "Poppins-SemiBold",
-                  
                 }}
                 onPress={() => router.push("/register")}
               >

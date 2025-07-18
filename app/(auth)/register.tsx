@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    Text,
-    TouchableWithoutFeedback,
-    useColorScheme,
-    View,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableWithoutFeedback,
+  useColorScheme,
+  View,
 } from "react-native";
 
 import { ButtonCustom } from "@/components/ButtonCustom";
+import FormCliente from "@/components/formCliente";
+import FormEntrenador from "@/components/formEntrenador";
+import FormNutricionista from "@/components/FormNutricionista";
+import FormGimnasio from "@/components/GymForm";
 import { SelectDropdownCustom } from "@/components/SelectCustom";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import FormCliente from "./formCliente";
 
 const HomeScreen = () => {
   const [email, setEmail] = useState("");
@@ -24,6 +28,36 @@ const HomeScreen = () => {
   const [tipo, setTipo] = useState("");
   const [objetivo, setObjetivo] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+
+  const [especialidades, setEspecialidades] = useState<string[]>([]);
+  const [tarifa, setTarifa] = useState("");
+  const [moneda, setMoneda] = useState("COP");
+  const [periodoFacturacion, setPeriodoFacturacion] = useState("mensual");
+  const [documento, setDocumento] = useState<File | null>(null);
+
+  const [direccion, setDireccion] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [horario, setHorario] = useState("");
+  const [instalaciones, setInstalaciones] = useState("");
+  const [ubicacion, setUbicacion] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
+  // función para detectar ubicación
+  const detectarUbicacion = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permiso denegado");
+      return;
+    }
+    const loc = await Location.getCurrentPositionAsync({});
+    setUbicacion({
+      latitude: loc.coords.latitude,
+      longitude: loc.coords.longitude,
+    });
+  };
 
   const router = useRouter();
 
@@ -39,6 +73,70 @@ const HomeScreen = () => {
 
     router.replace("/home");
   };
+
+  const handleRegister = async () => {
+  const payload: any = {
+    role: tipo, // importante: Laravel espera "role"
+    name: nombre,
+    email,
+    password,
+  };
+
+  // Cliente
+  if (tipo === "cliente") {
+    payload.objetivo = objetivo;
+  }
+
+  // Entrenador / Nutricionista
+  if (tipo === "entrenador" || tipo === "nutricionista") {
+    payload.especialidades = especialidades;
+    payload.tarifa = tarifa;
+    payload.moneda = moneda;
+    payload.periodo_facturacion = periodoFacturacion;
+    // Si manejas archivos con backend, se debe usar FormData
+    // payload.documento = documento;
+  }
+
+  // Gimnasio
+  if (tipo === "gimnasio") {
+    payload.telefono = telefono;
+    payload.direccion = direccion;
+    payload.descripcion = descripcion;
+    payload.horario = horario;
+    payload.instalaciones = instalaciones;
+    if (ubicacion) {
+      payload.ubicacion = {
+        latitude: ubicacion.latitude,
+        longitude: ubicacion.longitude,
+      };
+    }
+  }
+
+  try {
+    const response = await fetch("http://www.coyoteworkout.com/api/register", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.log("Errores del servidor:", data.errors);
+      Alert.alert("Error", "Revisa los campos obligatorios.");
+    } else {
+      Alert.alert("Registro exitoso", `Bienvenida, ${data.user.name}`);
+      router.replace("/home");
+    }
+  } catch (err) {
+    console.error("Error de conexión", err);
+    Alert.alert("Error", "No se pudo conectar con el servidor.");
+  }
+};
+
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -89,6 +187,7 @@ const HomeScreen = () => {
                 <SelectDropdownCustom
                   value={tipo}
                   setValue={setTipo}
+                  containerStyle={{ width: "100%" }}
                   options={[
                     { label: "Cliente", value: "cliente" },
                     { label: "Entrenador", value: "entrenador" },
@@ -120,49 +219,87 @@ const HomeScreen = () => {
 
               {tipo === "entrenador" && (
                 <View style={{ marginTop: 20 }}>
-                  <Text
-                    style={{
-                      color: isDarkMode ? "white" : "black",
-                      fontFamily: "Poppins-Regular",
-                    }}
-                  >
-                    Certificaciones
-                  </Text>
-                  {/* Reemplaza esto con tu input personalizado */}
+                  <FormEntrenador
+                    especialidades={especialidades}
+                    setEspecialidades={setEspecialidades}
+                    nombre={nombre}
+                    setNombre={setNombre}
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    tarifa={tarifa}
+                    setTarifa={setTarifa}
+                    moneda={moneda}
+                    setMoneda={setMoneda}
+                    periodoFacturacion={periodoFacturacion}
+                    setPeriodoFacturacion={setPeriodoFacturacion}
+                    documento={documento}
+                    setDocumento={setDocumento}
+                    isChecked={isChecked}
+                    setIsChecked={setIsChecked}
+                    errors={errors}
+                    isDarkMode={isDarkMode}
+                    router={router}
+                  />
                 </View>
               )}
 
               {tipo === "nutricionista" && (
                 <View style={{ marginTop: 20 }}>
-                  <Text
-                    style={{
-                      color: isDarkMode ? "white" : "black",
-                      fontFamily: "Poppins-Regular",
-                    }}
-                  >
-                    Especialidad
-                  </Text>
-                  {/* Reemplaza esto con tu input personalizado */}
+                  <FormNutricionista
+                    especialidades={especialidades}
+                    setEspecialidades={setEspecialidades}
+                    nombre={nombre}
+                    setNombre={setNombre}
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    tarifa={tarifa}
+                    setTarifa={setTarifa}
+                    moneda={moneda}
+                    setMoneda={setMoneda}
+                    periodoFacturacion={periodoFacturacion}
+                    setPeriodoFacturacion={setPeriodoFacturacion}
+                    documento={documento}
+                    setDocumento={setDocumento}
+                    isChecked={isChecked}
+                    setIsChecked={setIsChecked}
+                    errors={errors}
+                    isDarkMode={isDarkMode}
+                    router={router}
+                  />
                 </View>
               )}
 
               {tipo === "gimnasio" && (
                 <View style={{ marginTop: 20 }}>
-                  <Text
-                    style={{
-                      color: isDarkMode ? "white" : "black",
-                      fontFamily: "Poppins-Regular",
-                    }}
-                  >
-                    Nombre del gimnasio
-                  </Text>
-                  {/* Reemplaza esto con tu input personalizado */}
+                  <FormGimnasio
+                    nombre={nombre}
+                    setNombre={setNombre}
+                    direccion={direccion}
+                    setDireccion={setDireccion}
+                    telefono={telefono}
+                    setTelefono={setTelefono}
+                    email={email}
+                    setEmail={setEmail}
+                    descripcion={descripcion}
+                    setDescripcion={setDescripcion}
+                    horario={horario}
+                    setHorario={setHorario}
+                    instalaciones={instalaciones}
+                    setInstalaciones={setInstalaciones}
+                    isDarkMode={isDarkMode}
+                    detectarUbicacion={detectarUbicacion}
+                    ubicacion={ubicacion}
+                    errors={{}} // puedes pasar errores según validación
+                  />
                 </View>
               )}
             </View>
           </View>
-
-          {/* Footer con botón abajo */}
+ 
           <View style={{ alignItems: "center" }}>
             <ButtonCustom
               text={isLoading ? "Cargando..." : "Registrar"}

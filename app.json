@@ -6,10 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "coyoteapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "userInterfaceStyle": "automatic", 
     "jsEngine": "jsc",
-
     "ios": {
       "supportsTablet": true
     },
@@ -18,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.dianadeveloper.coyoteapp"
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +38,14 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2ddc227d-ecf5-4227-b041-2d4a92c2858b"
+      }
+    },
+    "owner": "dianadeveloper",
+    "newArchEnabled": false 
   }
 }

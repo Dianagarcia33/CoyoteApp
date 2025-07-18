@@ -8,6 +8,8 @@ type SelectDropdownCustomProps = {
   options: { label: string; value: string }[];
   placeholder?: string;
   isDarkMode?: boolean;
+    containerStyle?: any;
+
   errorMessage?: string;
   icon?: React.ReactNode; // <-- ícono a la izquierda
 };
@@ -18,14 +20,15 @@ export function SelectDropdownCustom({
   options,
   placeholder = "Yo soy",
   isDarkMode = false,
+  containerStyle = {},
   errorMessage,
   icon,
 }: SelectDropdownCustomProps) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState(options);
 
-  return (
-    <View style={{ width: "100%", marginBottom: 10, zIndex: 50 }}>
+  return (<View style={[{ width: "100%", marginBottom: 10, zIndex: 50 }, containerStyle]}>
+
       {/* Contenedor horizontal para ícono + dropdown */}
       <View
         style={[
@@ -35,11 +38,9 @@ export function SelectDropdownCustom({
             borderColor: errorMessage ? "#ef4444" : "transparent",
           },
         ]}
-      >
-        {/* Ícono a la izquierda */}
+      > 
         {icon && <View style={styles.iconContainer}>{icon}</View>}
-
-        {/* Dropdown toma el resto del espacio */}
+ 
         <View style={{ flex: 1 }}>
           <DropDownPicker
             open={open}

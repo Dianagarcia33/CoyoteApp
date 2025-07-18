@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    TouchableWithoutFeedback,
-    useColorScheme,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableWithoutFeedback,
+  useColorScheme,
+  View,
 } from "react-native";
 
 import { useRouter } from "expo-router";
@@ -86,7 +86,6 @@ const HomeScreen = () => {
                 lineHeight: 22,
                 color: isDarkMode ? "#d1d5db" : "#4b5563",
                 fontFamily: "Poppins-Regular",
-                whiteSpace: "pre-wrap", // para que respete saltos de línea
               }}
             >
               {TERMS_TEXT}

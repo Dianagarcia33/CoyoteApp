@@ -1,4 +1,4 @@
-import LogoImage from "@/assets/images/react-logo.png"; // ajusta si usas otro logo
+import LogoImage from "@/assets/images/loginIcon.png"; // ajusta si usas otro logo
 import React from "react";
 import { Image, ImageStyle, StyleProp } from "react-native";
 
@@ -8,7 +8,7 @@ type LogoProps = {
   style?: StyleProp<ImageStyle>;
 };
 
-export function Logo({ width = 120, height = 120, style }: LogoProps) {
+export function Logo({ width = 150, height = 150, style }: LogoProps) {
   return (
     <Image
       source={LogoImage}
