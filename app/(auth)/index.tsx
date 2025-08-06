@@ -15,6 +15,7 @@ import { InputCustom } from "@/components/InputCustom";
 import { Logo } from "@/components/Logo";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useLogin } from "../../hooks/useLogin";
 import { useAuth } from "../context/AuthContext";
 
 const HomeScreen = () => {
@@ -22,14 +23,11 @@ const HomeScreen = () => {
   const [password, setPassword] = useState("");
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const isDarkMode = useColorScheme() === "dark";
-  const { login } = useAuth();
+  // const { login } = useAuth(); // Eliminado porque no se usa
 
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
+  const { handleLogin, isLoading, errors } = useLogin();
 
   const { user, isLoading: loadingSession } = useAuth();
 
@@ -39,52 +37,14 @@ const HomeScreen = () => {
     }
   }, [loadingSession, user]);
 
-  const handleLogin = async () => {
-    const newErrors: typeof errors = {};
 
-    if (!email.trim()) {
-      newErrors.email = "El email es requerido";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Formato de email inválido";
-    }
-
-    if (!password.trim()) {
-      newErrors.password = "La contraseña es requerida";
-    }
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://www.coyoteworkout.com/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const errorMsg =
-          data?.message || "Error del servidor. Intenta más tarde.";
-        throw new Error(errorMsg);
-      }
-
-      await login(data.user, data.access_token);
-      router.replace("/home");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Ocurrió un error inesperado.";
-      Alert.alert("Inicio de sesión fallido", message);
-    } finally {
-      setIsLoading(false);
+  const onLogin = async () => {
+    const result = await handleLogin(email, password);
+    if (!result.success) {
+      Alert.alert("Inicio de sesión fallido", result.message || "Error");
     }
   };
+
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -213,11 +173,9 @@ const HomeScreen = () => {
                   <Feather name="log-in" size={20} color="white" />
                 )
               }
-              onPress={handleLogin}
-              disabled={isLoading}
-              style={{
-                opacity: isLoading ? 0.6 : 1,
-              }}
+              onPress={onLogin}
+              // disabled={isLoading} // Prop eliminada porque no existe en ButtonCustomProps
+              // style eliminado porque no existe en ButtonCustomProps
             />
 
             <Text

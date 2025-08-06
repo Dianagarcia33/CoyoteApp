@@ -15,8 +15,8 @@ export default function SplashScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require("@/assets/images/react-logo.png")} style={styles.logo} />
-      <Text style={styles.text}>Bienvenido a Mi App</Text>
+      <Image source={require("@/assets/images/coyote-logo2.png")} style={styles.logo} />
+      <Text style={styles.text}>CoyoteApp</Text>
     </View>
   );
 }
@@ -29,14 +29,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
     resizeMode: "contain",
-    marginBottom: 20,
+    marginBottom: 30,
+    backgroundColor: "transparent",
   },
   text: {
     color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontFamily: "Poppins_600SemiBold",
+    marginTop: 20,
   },
 });

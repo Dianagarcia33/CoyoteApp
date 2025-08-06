@@ -2,7 +2,7 @@ import { ButtonCustom } from '@/components/ButtonCustom';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const hours = Array.from({ length: 12 }, (_, i) => i + 1); // 1-12
 const minutes = [0, 15, 30, 45];
@@ -17,7 +17,6 @@ const NewCalendarEvent = () => {
   const [selectedMinute, setSelectedMinute] = useState(30);
   const [selectedAMPM, setSelectedAMPM] = useState('PM');
   const [selectedCliente, setSelectedCliente] = useState(params.cliente ? String(params.cliente) : '');
-  const [selectedRutina, setSelectedRutina] = useState(params.rutina ? String(params.rutina) : '');
 
   const formatFecha = (dateStr: string) => {
     const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -66,7 +65,7 @@ const NewCalendarEvent = () => {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingTop: 40, paddingBottom: 12 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingTop: Platform.OS === "ios" ? 50 : 35, paddingBottom: 12 }}>
         <TouchableOpacity style={{ backgroundColor: '#F7F8F8', borderRadius: 8, padding: 6, marginRight: 8 }} onPress={() => router.back()}>
           <Ionicons name="close" size={22} color="#222" />
         </TouchableOpacity>
@@ -110,9 +109,7 @@ const NewCalendarEvent = () => {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="options-outline" size={18} color="#bdbdbd" style={{ marginRight: 8 }} />
-            <Text style={{ color: selectedRutina ? '#222' : '#bdbdbd', fontSize: 15, fontWeight: selectedRutina ? 'bold' : 'normal' }}>
-              {selectedRutina ? selectedRutina : 'Rutina'}
-            </Text>
+            <Text style={{ color: '#bdbdbd', fontSize: 15 }}>Rutina</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#bdbdbd" />
         </TouchableOpacity>

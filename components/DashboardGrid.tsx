@@ -1,7 +1,8 @@
 import React from "react";
+import { DashboardGridCliente } from "./DashboardGridCliente";
 import { DashboardGridEntrenador } from "./DashboardGridEntrenador";
-// Importa los otros grid cuando los tengas
-// import { DashboardGridCliente } from "./DashboardGridCliente";
+import { DashboardGridGym } from "./DashboardGridGym";
+import { DashboardGridNutricionista } from "./DashboardGridNutricionista";
 // import { DashboardGridGimnasio } from "./DashboardGridGimnasio";
 
 interface DashboardGridProps {
@@ -12,12 +13,12 @@ export const DashboardGrid: React.FC<DashboardGridProps> = ({ role }) => {
   switch (role) {
     case "entrenador":
       return <DashboardGridEntrenador />;
-    // case "cliente":
-    //   return <DashboardGridCliente />;
-    // case "gimnasio":
-    //   return <DashboardGridGimnasio />;
-    // case "nutricionista":
-    //   return <DashboardGridNutricionista />;
+    case "cliente":
+      return <DashboardGridCliente/>;
+    case "gimnasio":
+      return <DashboardGridGym />;
+    case "nutricionista":
+      return <DashboardGridNutricionista />;
     default:
       return null;
   }

@@ -1,0 +1,6 @@
+// Pega aquí la respuesta cruda de la API para depuración
+// Ejemplo:
+// {
+//   "data": { "data": [ ...clientes... ] },
+//   "summary": { "total_clientes": 10 }
+// }

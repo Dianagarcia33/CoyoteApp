@@ -1,4 +1,3 @@
-import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Text, View } from "react-native";
 import { useAuth } from "../app/context/AuthContext";
@@ -31,9 +30,7 @@ export const UserInfo: React.FC<Props> = ({ isDarkMode = false }) => {
       </View>
 
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
-        <Feather name="user-check" size={14} color={subTextColor} style={{ 
-            marginTop: -10, 
-          }}/>
+         
         <Text
           style={{
             fontFamily: "Poppins-Regular",

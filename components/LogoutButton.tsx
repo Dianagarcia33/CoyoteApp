@@ -1,4 +1,3 @@
-import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity } from "react-native";
@@ -19,7 +18,7 @@ export const LogoutButton = () => {
         style: "destructive",
         onPress: async () => {
           await logout();
-          router.replace("/"); // Redirige al login
+          router.replace("/");  
         },
       },
     ]);
@@ -31,19 +30,18 @@ export const LogoutButton = () => {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#FEE2E2",
+        backgroundColor: "#f9f9f9",
         padding: 12,
-        borderRadius: 12,
-        marginTop: 30,
+        borderRadius: 12, 
       }}
       activeOpacity={0.8}
     >
-      <Feather name="log-out" size={20} color="#B91C1C" />
+      
       <Text
         style={{
           marginLeft: 10,
           fontSize: 16,
-          color: "#B91C1C",
+          color: "#555",
           fontFamily: "Poppins-SemiBold",
         }}
       >

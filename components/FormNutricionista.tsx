@@ -23,6 +23,12 @@ type FormNutricionistaProps = {
   setPeriodoFacturacion: (val: string) => void;
   documento: any;
   setDocumento: (file: any) => void;
+  contactoEmergenciaNombre: string;
+  setContactoEmergenciaNombre: (val: string) => void;
+  contactoEmergenciaTelefono: string;
+  setContactoEmergenciaTelefono: (val: string) => void;
+  contactoEmergenciaRelacion: string;
+  setContactoEmergenciaRelacion: (val: string) => void;
   isChecked: boolean;
   setIsChecked: (val: boolean) => void;
   errors: {
@@ -34,6 +40,9 @@ type FormNutricionistaProps = {
     periodoFacturacion?: string;
     documento?: string;
     especialidades?: string;
+    contactoEmergenciaNombre?: string;
+    contactoEmergenciaTelefono?: string;
+    contactoEmergenciaRelacion?: string;
   };
   isDarkMode: boolean;
   router: any;
@@ -56,6 +65,12 @@ export default function FormNutricionista({
   setPeriodoFacturacion,
   documento,
   setDocumento,
+  contactoEmergenciaNombre,
+  setContactoEmergenciaNombre,
+  contactoEmergenciaTelefono,
+  setContactoEmergenciaTelefono,
+  contactoEmergenciaRelacion,
+  setContactoEmergenciaRelacion,
   isChecked,
   setIsChecked,
   errors,
@@ -193,7 +208,7 @@ export default function FormNutricionista({
         label="Documento profesional"
         placeholder="Subir archivo"
         value={documento?.name || ""}
-        onFocus={pickDocument}
+        onChangeText={pickDocument}
         icon={
           <Feather
             name="file"
@@ -202,9 +217,80 @@ export default function FormNutricionista({
           />
         }
         isDarkMode={isDarkMode}
-        editable={false}
         errorMessage={errors.documento}
       />
+
+      {/* Campos de contacto de emergencia */}
+      <Text
+        style={{
+          color: isDarkMode ? "white" : "black",
+          fontFamily: "Poppins-SemiBold",
+          fontSize: 16,
+          marginTop: 20,
+          marginBottom: 10,
+        }}
+      >
+        Contacto de emergencia
+      </Text>
+
+      <InputCustom
+        label="Nombre del contacto de emergencia"
+        value={contactoEmergenciaNombre}
+        onChangeText={setContactoEmergenciaNombre}
+        placeholder="Nombre completo"
+        icon={
+          <Feather
+            name="user"
+            size={14}
+            color={isDarkMode ? "#FFFFFF" : "#6B7280"}
+          />
+        }
+        isDarkMode={isDarkMode}
+        style={{ marginBottom: 10 }}
+        errorMessage={errors.contactoEmergenciaNombre}
+      />
+
+      <InputCustom
+        label="Teléfono del contacto de emergencia"
+        value={contactoEmergenciaTelefono}
+        onChangeText={setContactoEmergenciaTelefono}
+        placeholder="Número de teléfono"
+        icon={
+          <Feather
+            name="phone"
+            size={14}
+            color={isDarkMode ? "#FFFFFF" : "#6B7280"}
+          />
+        }
+        isDarkMode={isDarkMode}
+        keyboardType="phone-pad"
+        style={{ marginBottom: 10 }}
+        errorMessage={errors.contactoEmergenciaTelefono}
+      />
+
+      {/* zIndex: 10 para evitar conflictos */}
+      <View style={{ zIndex: 10, marginBottom: 10 }}>
+        <SelectDropdownCustom
+          value={contactoEmergenciaRelacion}
+          setValue={setContactoEmergenciaRelacion}
+          options={[
+            { label: "Padre/Madre", value: "padre" },
+            { label: "Esposo/Esposa", value: "esposo" },
+            { label: "Hermano/Hermana", value: "hermano" },
+            { label: "Hijo/Hija", value: "hijo" },
+            { label: "Abuelo/Abuela", value: "abuelo" },
+            { label: "Tío/Tía", value: "tio" },
+            { label: "Primo/Prima", value: "primo" },
+            { label: "Amigo/Amiga", value: "amigo" },
+            { label: "Otro", value: "otro" },
+          ]}
+          placeholder="Relación con el contacto"
+          isDarkMode={isDarkMode}
+          icon={<Feather name="users" size={20} color="#374151" />}
+          containerStyle={{ width: "100%" }}
+          errorMessage={errors.contactoEmergenciaRelacion}
+        />
+      </View>
 
       <View
         style={{
@@ -214,7 +300,7 @@ export default function FormNutricionista({
           flexWrap: "wrap",
         }}
       >
-        <Checkbox checked={isChecked} onChange={setIsChecked} isDarkMode={isDarkMode} />
+        <Checkbox checked={isChecked} onChange={setIsChecked} />
         <Text
           style={{
             color: isDarkMode ? "white" : "black",

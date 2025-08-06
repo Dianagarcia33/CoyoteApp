@@ -14,12 +14,21 @@ type FormClienteProps = {
   setEmail: (val: string) => void;
   password: string;
   setPassword: (val: string) => void;
+  contactoEmergenciaNombre: string;
+  setContactoEmergenciaNombre: (val: string) => void;
+  contactoEmergenciaTelefono: string;
+  setContactoEmergenciaTelefono: (val: string) => void;
+  contactoEmergenciaRelacion: string;
+  setContactoEmergenciaRelacion: (val: string) => void;
   isChecked: boolean;
   setIsChecked: (val: boolean) => void;
   errors: {
     nombre?: string;
     email?: string;
     password?: string;
+    contactoEmergenciaNombre?: string;
+    contactoEmergenciaTelefono?: string;
+    contactoEmergenciaRelacion?: string;
   };
   isDarkMode: boolean;
   router: any;
@@ -34,6 +43,12 @@ export default function FormCliente({
   setEmail,
   password,
   setPassword,
+  contactoEmergenciaNombre,
+  setContactoEmergenciaNombre,
+  contactoEmergenciaTelefono,
+  setContactoEmergenciaTelefono,
+  contactoEmergenciaRelacion,
+  setContactoEmergenciaRelacion,
   isChecked,
   setIsChecked,
   errors,
@@ -109,6 +124,75 @@ export default function FormCliente({
         isDarkMode={isDarkMode}
         secureTextEntry
         errorMessage={errors.password}
+      />
+
+      {/* Campos de contacto de emergencia */}
+      <Text
+        style={{
+          color: isDarkMode ? "white" : "black",
+          fontFamily: "Poppins-SemiBold",
+          fontSize: 16,
+          marginTop: 20,
+          marginBottom: 10,
+        }}
+      >
+        Contacto de emergencia
+      </Text>
+
+      <InputCustom
+        label="Nombre del contacto de emergencia"
+        value={contactoEmergenciaNombre}
+        onChangeText={setContactoEmergenciaNombre}
+        placeholder="Nombre completo"
+        icon={
+          <Feather
+            name="user"
+            size={14}
+            color={isDarkMode ? "#FFFFFF" : "#6B7280"}
+          />
+        }
+        isDarkMode={isDarkMode}
+        style={{ marginBottom: 10 }}
+        errorMessage={errors.contactoEmergenciaNombre}
+      />
+
+      <InputCustom
+        label="Teléfono del contacto de emergencia"
+        value={contactoEmergenciaTelefono}
+        onChangeText={setContactoEmergenciaTelefono}
+        placeholder="Número de teléfono"
+        icon={
+          <Feather
+            name="phone"
+            size={14}
+            color={isDarkMode ? "#FFFFFF" : "#6B7280"}
+          />
+        }
+        isDarkMode={isDarkMode}
+        keyboardType="phone-pad"
+        style={{ marginBottom: 10 }}
+        errorMessage={errors.contactoEmergenciaTelefono}
+      />
+
+      <SelectDropdownCustom
+        value={contactoEmergenciaRelacion}
+        setValue={setContactoEmergenciaRelacion}
+        options={[
+          { label: "Padre/Madre", value: "padre" },
+          { label: "Esposo/Esposa", value: "esposo" },
+          { label: "Hermano/Hermana", value: "hermano" },
+          { label: "Hijo/Hija", value: "hijo" },
+          { label: "Abuelo/Abuela", value: "abuelo" },
+          { label: "Tío/Tía", value: "tio" },
+          { label: "Primo/Prima", value: "primo" },
+          { label: "Amigo/Amiga", value: "amigo" },
+          { label: "Otro", value: "otro" },
+        ]}
+        placeholder="Relación con el contacto"
+        isDarkMode={isDarkMode}
+        icon={<Feather name="users" size={20} color="#374151" />}
+        containerStyle={{ marginBottom: 10 }}
+        errorMessage={errors.contactoEmergenciaRelacion}
       />
 
       <View

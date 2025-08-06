@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const clientes = [
   {
@@ -42,7 +42,7 @@ export default function ListaClientes() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingTop: 40, paddingBottom: 18 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingTop: Platform.OS === "ios" ? 50 : 35, paddingBottom: 18 }}>
         <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 8 }}>
           <Ionicons name="chevron-back" size={24} color="#222" />
         </TouchableOpacity>

@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "coyoteapp",
-    "userInterfaceStyle": "automatic", 
+    "userInterfaceStyle": "automatic",
     "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true
@@ -24,15 +24,30 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "splash": {
+      "image": "./assets/images/coyote-logo.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#0b111e"
+    },
     "plugins": [
       "expo-router",
+      "expo-dev-client",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/coyote-logo.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#0b111e"
+        }
+      ],
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#FF6A3D",
+          "defaultChannel": "default"
         }
       ]
     ],
@@ -46,6 +61,6 @@
       }
     },
     "owner": "dianadeveloper",
-    "newArchEnabled": false 
+    "newArchEnabled": false
   }
 }

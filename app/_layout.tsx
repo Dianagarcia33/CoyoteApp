@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/app/context/AuthContext";
+import { NotificationProvider } from "@/app/context/NotificationContext";
 import "@/global.css";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -19,17 +20,19 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider> {/* ✅ aquí envuelves todo con el provider */}
-      <ThemeProvider value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: "slide_from_right",
-            presentation: "card",
-            gestureEnabled: true,
-          }}
-        />
-      </ThemeProvider>
+    <AuthProvider> 
+      <NotificationProvider>
+        <ThemeProvider value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "slide_from_right",
+              presentation: "card",
+              gestureEnabled: true,
+            }}
+          />
+        </ThemeProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

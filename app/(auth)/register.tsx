@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  Text,
-  TouchableWithoutFeedback,
-  useColorScheme,
-  View,
+    Alert,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    Text,
+    TouchableWithoutFeedback,
+    useColorScheme,
+    View,
 } from "react-native";
 
 import { ButtonCustom } from "@/components/ButtonCustom";
@@ -17,6 +17,7 @@ import FormNutricionista from "@/components/FormNutricionista";
 import FormGimnasio from "@/components/GymForm";
 import { SelectDropdownCustom } from "@/components/SelectCustom";
 import { Feather } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 
 const HomeScreen = () => {
@@ -28,6 +29,11 @@ const HomeScreen = () => {
   const [tipo, setTipo] = useState("");
   const [objetivo, setObjetivo] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+
+  // Estados para contacto de emergencia
+  const [contactoEmergenciaNombre, setContactoEmergenciaNombre] = useState("");
+  const [contactoEmergenciaTelefono, setContactoEmergenciaTelefono] = useState("");
+  const [contactoEmergenciaRelacion, setContactoEmergenciaRelacion] = useState("");
 
   const [especialidades, setEspecialidades] = useState<string[]>([]);
   const [tarifa, setTarifa] = useState("");
@@ -66,6 +72,9 @@ const HomeScreen = () => {
     email?: string;
     password?: string;
     nombre?: string;
+    contactoEmergenciaNombre?: string;
+    contactoEmergenciaTelefono?: string;
+    contactoEmergenciaRelacion?: string;
   }>({});
 
   const handleLogin = async () => {
@@ -75,26 +84,27 @@ const HomeScreen = () => {
   };
 
   const handleRegister = async () => {
+  setIsLoading(true);
+  
   const payload: any = {
     role: tipo, // importante: Laravel espera "role"
     name: nombre,
     email,
     password,
+    contacto_emergencia_nombre: contactoEmergenciaNombre,
+    contacto_emergencia_telefono: contactoEmergenciaTelefono,
+    contacto_emergencia_relacion: contactoEmergenciaRelacion,
   };
-
-  // Cliente
+ 
   if (tipo === "cliente") {
     payload.objetivo = objetivo;
   }
-
-  // Entrenador / Nutricionista
+ 
   if (tipo === "entrenador" || tipo === "nutricionista") {
     payload.especialidades = especialidades;
     payload.tarifa = tarifa;
     payload.moneda = moneda;
-    payload.periodo_facturacion = periodoFacturacion;
-    // Si manejas archivos con backend, se debe usar FormData
-    // payload.documento = documento;
+    payload.periodo_facturacion = periodoFacturacion; 
   }
 
   // Gimnasio
@@ -113,7 +123,7 @@ const HomeScreen = () => {
   }
 
   try {
-    const response = await fetch("http://www.coyoteworkout.com/api/register", {
+    const response = await fetch("http://192.168.18.84:8000/api/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -125,15 +135,15 @@ const HomeScreen = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.log("Errores del servidor:", data.errors);
       Alert.alert("Error", "Revisa los campos obligatorios.");
     } else {
       Alert.alert("Registro exitoso", `Bienvenida, ${data.user.name}`);
       router.replace("/home");
     }
-  } catch (err) {
-    console.error("Error de conexión", err);
+  } catch {
     Alert.alert("Error", "No se pudo conectar con el servidor.");
+  } finally {
+    setIsLoading(false);
   }
 };
 
@@ -209,6 +219,12 @@ const HomeScreen = () => {
                   setEmail={setEmail}
                   password={password}
                   setPassword={setPassword}
+                  contactoEmergenciaNombre={contactoEmergenciaNombre}
+                  setContactoEmergenciaNombre={setContactoEmergenciaNombre}
+                  contactoEmergenciaTelefono={contactoEmergenciaTelefono}
+                  setContactoEmergenciaTelefono={setContactoEmergenciaTelefono}
+                  contactoEmergenciaRelacion={contactoEmergenciaRelacion}
+                  setContactoEmergenciaRelacion={setContactoEmergenciaRelacion}
                   isChecked={isChecked}
                   setIsChecked={setIsChecked}
                   errors={errors}
@@ -218,7 +234,7 @@ const HomeScreen = () => {
               )}
 
               {tipo === "entrenador" && (
-                <View style={{ marginTop: 20 }}>
+                <View  >
                   <FormEntrenador
                     especialidades={especialidades}
                     setEspecialidades={setEspecialidades}
@@ -236,6 +252,12 @@ const HomeScreen = () => {
                     setPeriodoFacturacion={setPeriodoFacturacion}
                     documento={documento}
                     setDocumento={setDocumento}
+                    contactoEmergenciaNombre={contactoEmergenciaNombre}
+                    setContactoEmergenciaNombre={setContactoEmergenciaNombre}
+                    contactoEmergenciaTelefono={contactoEmergenciaTelefono}
+                    setContactoEmergenciaTelefono={setContactoEmergenciaTelefono}
+                    contactoEmergenciaRelacion={contactoEmergenciaRelacion}
+                    setContactoEmergenciaRelacion={setContactoEmergenciaRelacion}
                     isChecked={isChecked}
                     setIsChecked={setIsChecked}
                     errors={errors}
@@ -246,7 +268,7 @@ const HomeScreen = () => {
               )}
 
               {tipo === "nutricionista" && (
-                <View style={{ marginTop: 20 }}>
+                <View  >
                   <FormNutricionista
                     especialidades={especialidades}
                     setEspecialidades={setEspecialidades}
@@ -264,6 +286,12 @@ const HomeScreen = () => {
                     setPeriodoFacturacion={setPeriodoFacturacion}
                     documento={documento}
                     setDocumento={setDocumento}
+                    contactoEmergenciaNombre={contactoEmergenciaNombre}
+                    setContactoEmergenciaNombre={setContactoEmergenciaNombre}
+                    contactoEmergenciaTelefono={contactoEmergenciaTelefono}
+                    setContactoEmergenciaTelefono={setContactoEmergenciaTelefono}
+                    contactoEmergenciaRelacion={contactoEmergenciaRelacion}
+                    setContactoEmergenciaRelacion={setContactoEmergenciaRelacion}
                     isChecked={isChecked}
                     setIsChecked={setIsChecked}
                     errors={errors}
@@ -274,7 +302,7 @@ const HomeScreen = () => {
               )}
 
               {tipo === "gimnasio" && (
-                <View style={{ marginTop: 20 }}>
+                <View  >
                   <FormGimnasio
                     nombre={nombre}
                     setNombre={setNombre}
@@ -308,11 +336,7 @@ const HomeScreen = () => {
                   <Feather name="log-in" size={20} color="white" />
                 )
               }
-              onPress={handleLogin}
-              disabled={isLoading}
-              style={{
-                opacity: isLoading ? 0.6 : 1,
-              }}
+              onPress={handleRegister}
             />
             <View style={{ flexDirection: "row", marginTop: 10 }}>
               <Text
